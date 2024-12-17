@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Visualization of Summer Olympics</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+    <h1>Visualization of Summer Olympics</h1>
+    <div class="container">
+        <div id="chart">
+            <h2>Participation in the Summer Olympics by Continent and Year</h2>
+        </div>
+
+        <div id="controls">
+            <div id="map-container"></div>
+            <!-- <label for="year-select">Select Year:</label> -->
+            <select id="year-select"></select>
+            <div id="medal-type-select" class="medal-selector"></div>
+            <div class="legend"></div>
+        </div>
+
+    </div>
+    <div class="countrycontainer">
+        <div class="scroll-container" id="countryContainer">
+            <!-- 国家圆圈将通过JavaScript动态添加 -->
+        </div>
+    </div>
+    <div class="agecontainer">
+        <div id="agechart"></div> </div>
+        <div class="gender_spootrs_container">
+              <div id="genderchart">
+                <div class="title">Gender Distribution and female/male ratio</div> 
+              </div>
+             
+        <div id="voronoichart">     <div class="title">Sports Distribution</div>    <div class="year-control">
+            <label for="yearSelector">Year: <span id="yearDisplay"></span></label>
+            <input type="range" id="yearSelector" class="year-selector" list="yearList">
+            <datalist id="yearList">
+                <!-- 年份选项会通过JavaScript动态填充 -->
+            </datalist>
+        </div></div>      
+        </div>
+
+
+   
+
+    <div id="stats"></div>
+    <script src="https://unpkg.com/d3-weighted-voronoi@1.1.3/build/d3-weighted-voronoi.js"></script>
+    <script src="https://unpkg.com/d3-voronoi-map@2.1.1/build/d3-voronoi-map.js"></script>
+    <script src="https://unpkg.com/papaparse@5.3.0/papaparse.min.js"></script>
+    <script src="count.js"></script>
+    <script src="map.js"></script>
+    <script src="age.js"></script>
+    <!-- <script src="gender.js"></script> -->
+    <script>
+        let countryData = null;
+        let selectedCountryCode = null;
+
+        // 初始化函数
+        async function initializeData() {
+    try {
+        // 使用 Fetch API 从服务器加载 CSV 文件
+        const response = await fetch('medals_total.csv');
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const csvText = await response.text();
+        const result = Papa.parse(csvText, {
+            header: true,
+            skipEmptyLines: true
+        });
+
+        countryData = result.data;
+        initializeUI();
+
+        // 将国家代码数据暴露给全局，供其他脚本使用
+        window.getSelectedCountryCode = () => selectedCountryCode;
+        window.getAllCountryCodes = () => countryData.map(row => row.country_code);
+
+    } catch (error) {
+        console.error('Error loading country data:', error);
+        // 显示错误信息给用户
+        document.getElementById('countryContainer').innerHTML = 
+            '<div class="error">Error loading country data</div>';
+    }
+}
+
+
+        const container = document.getElementById('countryContainer');
+        let isScrolling = true;
+        let selectedIndex = 1;
+        let scrollInterval;
+
+        function initializeUI() {
+            // 创建国家圆圈
+            countryData.forEach((countryInfo, index) => {
+                const circle = document.createElement('div');
+                circle.className = 'country-circle';
+                circle.innerHTML = `
+                    <span class="country-name">${countryInfo.country}</span>
+                `;
+                circle.onclick = () => selectCountry(index);
+                container.appendChild(circle);
+
+            });
+            updateSelection();
+        }
+
+        function updateSelection() {
+            document.querySelectorAll('.country-circle').forEach((circle, index) => {
+                circle.classList.toggle('selected', index === selectedIndex);
+            });
+            
+            if (countryData && countryData[selectedIndex]) {
+                selectedCountryCode = countryData[selectedIndex].country_code;
+                // 触发自定义事件，通知其他可能监听的脚本
+                window.dispatchEvent(new CustomEvent('countrySelected', {
+                    detail: {
+                        country: countryData[selectedIndex].country,
+                        code: selectedCountryCode
+                    }
+                }));
+            }
+        }
+
+        function selectCountry(index) {
+            selectedIndex = index;
+            isScrolling = false;
+            updateSelection();
+            clearInterval(scrollInterval);
+        }
+        document.addEventListener('DOMContentLoaded', initializeData);
+    </script>
+</body>
+
+</html>

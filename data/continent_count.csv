@@ -1,0 +1,280 @@
+year,name,population
+1896,Africa,0
+1896,Asia,0
+1896,Asia/Europe,0
+1896,Europe,161
+1896,Europe/Asia,0
+1896,North America,14
+1896,Oceania,1
+1896,South America,0
+1896,Various,0
+1900,Africa,0
+1900,Asia,2
+1900,Asia/Europe,0
+1900,Europe,1121
+1900,Europe/Asia,4
+1900,North America,86
+1900,Oceania,3
+1900,South America,4
+1900,Various,0
+1904,Africa,8
+1904,Asia,0
+1904,Asia/Europe,0
+1904,Europe,56
+1904,Europe/Asia,0
+1904,North America,584
+1904,Oceania,2
+1904,South America,0
+1904,Various,0
+1906,Africa,2
+1906,Asia,0
+1906,Asia/Europe,1
+1906,Europe,793
+1906,Europe/Asia,0
+1906,North America,41
+1906,Oceania,4
+1906,South America,0
+1906,Various,0
+1908,Africa,14
+1908,Asia,0
+1908,Asia/Europe,0
+1908,Europe,1764
+1908,Europe/Asia,6
+1908,North America,209
+1908,Oceania,30
+1908,South America,1
+1908,Various,0
+1912,Africa,21
+1912,Asia,2
+1912,Asia/Europe,2
+1912,Europe,1973
+1912,Europe/Asia,159
+1912,North America,211
+1912,Oceania,25
+1912,South America,14
+1912,Various,2
+1920,Africa,57
+1920,Asia,20
+1920,Asia/Europe,0
+1920,Europe,2219
+1920,Europe/Asia,0
+1920,North America,340
+1920,Oceania,17
+1920,South America,22
+1920,Various,0
+1924,Africa,54
+1924,Asia,33
+1924,Asia/Europe,22
+1924,Europe,2577
+1924,Europe/Asia,3
+1924,North America,396
+1924,Oceania,40
+1924,South America,131
+1924,Various,0
+1928,Africa,58
+1928,Asia,65
+1928,Asia/Europe,31
+1928,Europe,2546
+1928,Europe/Asia,0
+1928,North America,383
+1928,Oceania,27
+1928,South America,136
+1928,Various,0
+1932,Africa,12
+1932,Asia,185
+1932,Asia/Europe,1
+1932,Europe,934
+1932,Europe/Asia,0
+1932,North America,657
+1932,Oceania,34
+1932,South America,99
+1932,Various,0
+1936,Africa,85
+1936,Asia,344
+1936,Asia/Europe,48
+1936,Europe,3225
+1936,Europe/Asia,0
+1936,North America,494
+1936,Oceania,39
+1936,South America,248
+1936,Various,0
+1948,Africa,120
+1948,Asia,309
+1948,Asia/Europe,58
+1948,Europe,2788
+1948,Europe/Asia,0
+1948,North America,608
+1948,Oceania,82
+1948,South America,436
+1948,Various,0
+1952,Africa,186
+1952,Asia,305
+1952,Asia/Europe,51
+1952,Europe,3081
+1952,Europe/Asia,295
+1952,North America,563
+1952,Oceania,95
+1952,South America,350
+1952,Various,0
+1956,Africa,107
+1956,Asia,466
+1956,Asia/Europe,19
+1956,Europe,1404
+1956,Europe/Asia,281
+1956,North America,470
+1956,Oceania,354
+1956,South America,196
+1956,Various,0
+1960,Africa,318
+1960,Asia,522
+1960,Asia/Europe,49
+1960,Europe,3116
+1960,Europe/Asia,283
+1960,North America,532
+1960,Oceania,228
+1960,South America,295
+1960,Various,0
+1964,Africa,294
+1964,Asia,986
+1964,Asia/Europe,23
+1964,Europe,2258
+1964,Europe/Asia,317
+1964,North America,680
+1964,Oceania,307
+1964,South America,269
+1964,Various,0
+1968,Africa,288
+1968,Asia,542
+1968,Asia/Europe,29
+1968,Europe,2426
+1968,Europe/Asia,312
+1968,North America,1213
+1968,Oceania,181
+1968,South America,333
+1968,Various,0
+1972,Africa,458
+1972,Asia,678
+1972,Asia/Europe,43
+1972,Europe,3540
+1972,Europe/Asia,371
+1972,North America,1134
+1972,Oceania,259
+1972,South America,320
+1972,Various,0
+1976,Africa,83
+1976,Asia,637
+1976,Asia/Europe,27
+1976,Europe,2806
+1976,Europe/Asia,410
+1976,North America,1308
+1976,Oceania,268
+1976,South America,260
+1976,Various,0
+1980,Africa,486
+1980,Asia,436
+1980,Asia/Europe,0
+1980,Europe,2824
+1980,Europe/Asia,489
+1980,North America,333
+1980,Oceania,124
+1980,South America,214
+1980,Various,0
+1984,Africa,633
+1984,Asia,1119
+1984,Asia/Europe,46
+1984,Europe,2748
+1984,Europe/Asia,0
+1984,North America,1383
+1984,Oceania,411
+1984,South America,449
+1984,Various,0
+1988,Africa,708
+1988,Asia,1481
+1988,Asia/Europe,41
+1988,Europe,3380
+1988,Europe/Asia,480
+1988,North America,1236
+1988,Oceania,425
+1988,South America,432
+1988,Various,0
+1992,Africa,743
+1992,Asia,1379
+1992,Asia/Europe,41
+1992,Europe,4275
+1992,Europe/Asia,0
+1992,North America,1460
+1992,Oceania,488
+1992,South America,450
+1992,Various,58
+1996,Africa,736
+1996,Asia,1742
+1996,Asia/Europe,53
+1996,Europe,4629
+1996,Europe/Asia,390
+1996,North America,1586
+1996,Oceania,579
+1996,South America,599
+1996,Various,0
+2000,Africa,868
+2000,Asia,1811
+2000,Asia/Europe,57
+2000,Europe,4629
+2000,Europe/Asia,435
+2000,North America,1460
+2000,Oceania,814
+2000,South America,549
+2000,Various,4
+2004,Africa,813
+2004,Asia,1906
+2004,Asia/Europe,64
+2004,Europe,4686
+2004,Europe/Asia,446
+2004,North America,1346
+2004,Oceania,667
+2004,South America,598
+2004,Various,0
+2008,Africa,845
+2008,Asia,2185
+2008,Asia/Europe,67
+2008,Europe,4519
+2008,Europe/Asia,454
+2008,North America,1446
+2008,Oceania,673
+2008,South America,673
+2008,Various,0
+2012,Africa,882
+2012,Asia,1885
+2012,Asia/Europe,112
+2012,Europe,4512
+2012,Europe/Asia,429
+2012,North America,1302
+2012,Oceania,663
+2012,South America,692
+2012,Various,4
+2016,Africa,990
+2016,Asia,2028
+2016,Asia/Europe,100
+2016,Europe,4479
+2016,Europe/Asia,284
+2016,North America,1448
+2016,Oceania,737
+2016,South America,1065
+2016,Various,19
+2021,Africa,950
+2021,Asia,2170
+2021,Asia/Europe,102
+2021,Europe,4486
+2021,Europe/Asia,318
+2021,North America,1539
+2021,Oceania,756
+2021,South America,747
+2021,Various,26
+2024,Africa,1011
+2024,Asia,1981
+2024,Asia/Europe,101
+2024,Europe,4948
+2024,Europe/Asia,0
+2024,North America,1445
+2024,Oceania,790
+2024,South America,736
+2024,Various,0
