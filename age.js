@@ -13,11 +13,19 @@ const voronoiHeight = 800;
 const voronoiRadius = Math.min(voronoiWidth, voronoiHeight) / 2 - 40;
 const voronoiCenter = [voronoiWidth / 2, voronoiHeight / 2];
 // 创建年龄分布SVG容器
+const chartStyles = {
+    font: "'Inter', sans-serif",
+    backgroundColor: "#ffffff",
+    gridColor: "#f0f0f0",
+    textColor: "#2d3748",
+    highlightColor: "#4299e1"
+};
 const agesvg = d3.select("#agechart")
     .append("svg")
     .attr("width", agewidth + margin.left + margin.right)
     .attr("height", ageheight + margin.top + margin.bottom)
     .append("g")
+    .attr("rx", 8)
     .attr("transform", `translate(${margin.left},${margin.top})`);
 
 // 创建性别分布SVG容器
@@ -229,7 +237,7 @@ Promise.all([
         const maxCount = d3.max(aggregatedData, d => d.count);
         const radiusScale = d3.scaleSqrt()
             .domain([1, maxCount])
-            .range([3, 25])
+            .range([4, 28])
             .clamp(true);
 
         // 清除现有的图形
@@ -326,30 +334,30 @@ Promise.all([
             .attr("y2", d => yScale(d));
 
         // 垂直网格线
-        const xGridLines = agesvg.selectAll(".x-grid")
-            .data(ageGroups.map(d => d.label));
+        // const xGridLines = agesvg.selectAll(".x-grid")
+        //     .data(ageGroups.map(d => d.label));
 
-        xGridLines.exit()
-            .transition()
-            .duration(500)
-            .style("opacity", 0)
-            .remove();
+        // xGridLines.exit()
+        //     .transition()
+        //     .duration(500)
+        //     .style("opacity", 0)
+        //     .remove();
 
-        const xGridEnter = xGridLines.enter()
-            .append("line")
-            .attr("class", "grid x-grid")
-            .style("opacity", 0)
-            .attr("y1", 0)
-            .attr("y2", ageheight);
+        // const xGridEnter = xGridLines.enter()
+        //     .append("line")
+        //     .attr("class", "grid x-grid")
+        //     .style("opacity", 0)
+        //     .attr("y1", 0)
+        //     .attr("y2", ageheight);
 
-        xGridLines.merge(xGridEnter)
-            .transition()
-            .duration(1000)
-            .style("opacity", 1)
-            .attr("x1", d => xScale(d))
-            .attr("x2", d => xScale(d))
-            .attr("y1", 0)
-            .attr("y2", ageheight);
+        // xGridLines.merge(xGridEnter)
+        //     .transition()
+        //     .duration(1000)
+        //     .style("opacity", 1)
+        //     .attr("x1", d => xScale(d))
+        //     .attr("x2", d => xScale(d))
+        //     .attr("y1", 0)
+        //     .attr("y2", ageheight);
 
         // 添加坐标轴（带动画）
         // X轴

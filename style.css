@@ -1,4 +1,23 @@
 
+:root {
+    --primary-color: #2563eb;
+    --secondary-color: #8ecae6;
+    --background-color: #f8fafc;
+    --text-color: #1e293b;
+    --border-radius: 12px;
+    --box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --transition: all 0.3s ease;
+}
+
+/* Global styles */
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.5;
+    margin: 0;
+    padding: 20px;
+}
 .label {
     cursor: pointer; 
 }
@@ -289,4 +308,4 @@ button:hover {
     dominant-baseline: hanging; /* 垂直居中，使文本顶部对齐 */
     fill: #333; /* 文字颜色 */
     pointer-events: none; /* 确保文本不响应鼠标事件 */
-}
+} 
