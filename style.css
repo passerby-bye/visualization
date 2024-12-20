@@ -24,32 +24,20 @@ body {
 
 h1 {
     text-align: center;
-    /* 文本居中 */
     color: #333;
-    /* 文字颜色 */
     font-size: 2rem;
-    /* 字号 */
     font-weight: bold;
-    /* 加粗 */
     margin: 0px 0;
-    /* 上下外边距 */
     padding: 10px;
-    /* 内边距 */
     background-color: #fff;
-    /* 标题背景颜色 */
     border-radius: 10px;
-    /* 圆角 */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    /* 阴影效果 */
     transition: transform 0.3s ease;
-    /* 添加过渡效果 */
-    /* max-width: 1400px; */
 
 }
 
 h1:hover {
     transform: scale(1.05);
-    /* 鼠标悬停时放大 */
 }
 
 .country {
@@ -229,7 +217,7 @@ select {
     border-radius: 50%;
 }
 
-/* 为datalist选项添加样式 */
+
 datalist {
     display: flex;
     flex-direction: column;
@@ -315,17 +303,11 @@ button:hover {
 
 .title {
     font-size: 1.5em;
-    /* 类似于 <h2> 的字体大小 */
     font-weight: bold;
-    /* 加粗 */
     text-anchor: middle;
-    /* 水平居中 */
     dominant-baseline: hanging;
-    /* 垂直居中，使文本顶部对齐 */
     fill: #333;
-    /* 文字颜色 */
     pointer-events: none;
-    /* 确保文本不响应鼠标事件 */
 }
 
 
@@ -342,7 +324,7 @@ button:hover {
 /* Visualization container */
 .visualization-container {
     width: 100%;
-    height: 800px; /* 设置固定高度，可以根据需要调整 */
+    height: 800px; 
     border: 1px solid #e5e7eb;
     border-radius: 8px;
     overflow: hidden;
@@ -398,13 +380,13 @@ button:hover {
     background-color: rgb(236, 236, 233);
 }
 
-/* 适应容器的 SVG */
+
 #map-container svg {
     max-width: 100%;
     height: auto;
 }
 
-/* 图表适应容器 */
+
 #chart svg {
     max-width: 100%;
     height: auto;
@@ -443,16 +425,16 @@ button:hover {
     color: #666;
     border: 1px solid #000;
     border-radius: 20px 20px 20px 0;
-    max-width: 120px; /* 限制最大宽度 */
-    white-space: normal; /* 允许正常换行 */
-    line-height: 1.4; /* 调整行高使文本更易读 */
+    max-width: 120px; 
+    white-space: normal; 
+    line-height: 1.4;
     animation: pulse 2s infinite;
 }
 
 
 
 
-        /* 新的仪表板容器样式 */
+        /* dashboard for 3 distributions */
         .dashboard-container {
             max-width: 1400px;
             height: 850px;
@@ -496,11 +478,7 @@ button:hover {
             gap: 20px;
         }
 
-        /* 国家列表容器样式 */
-        /* .countrycontainer {
-            height: 100%;
-            overflow-y: auto;
-        } */
+
 
         .scroll-container {
             display: flex;
@@ -518,7 +496,6 @@ button:hover {
             color: white;
         }
 
-        /* 年龄图表容器样式 */
         .agecontainer {
             flex: 1;
             width: 100%;
@@ -530,7 +507,7 @@ button:hover {
             height: 100%;
         }
 
-        /* 性别和运动项目分布图表样式 */
+
         #genderchart, #voronoichart {
             flex: 1;
             width: 100%;
@@ -545,7 +522,7 @@ button:hover {
             color: #333;
         }
 
-        /* 滚动条样式 */
+
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -574,3 +551,129 @@ button:hover {
             border-radius: 12px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+
+/* sports section*/
+.swcontainer {
+    position: relative; 
+    max-width: 1300px;
+    height: 500px; 
+}
+
+.swcontainer img {
+    position: absolute; 
+    top: 100px;
+    left: 200px;
+
+    z-index: 1; 
+}
+.tablecontainer img {
+    position: absolute; 
+    top: 220px;
+    left: 500px;
+
+    z-index: 1; 
+}
+
+#swchart {
+    position: absolute; 
+    top: 0;
+    left: 450px;
+    width: 100%; 
+    height: 100%;
+    z-index: 2; 
+} 
+.sports-container {
+    position: relative;
+    width: 1400px;
+    height: 650px; 
+    margin: 50px auto;
+    overflow: hidden;
+}
+.swcontainer, .rcontainer, .tablecontainer {
+    position: absolute;
+    width: 100%;
+    height: 100%; 
+    transition: transform 0.5s ease;
+}
+.swcontainer {
+    transform: translateX(0);
+}
+.rcontainer {
+    transform: translateX(100%);
+}
+.tablecontainer {
+    transform: translateX(200%);
+}
+.nav-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: white;
+    z-index: 1000;
+    transition: background 0.3s;
+}
+.nav-arrow:hover {
+    background: rgba(0, 0, 0, 0.8);
+}
+.nav-arrow.right {
+    right: 10px;
+}
+.nav-arrow.left {
+    left: 10px;
+    display: none;
+}
+.nav-arrow::before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-top: 2px solid white;
+    border-right: 2px solid white;
+    transform: rotate(45deg);
+}
+.nav-arrow.left::before {
+    transform: rotate(-135deg);
+}
+#tablehart{
+    width: 100%; 
+    height: 100%;
+}
+
+#swchart, #rchart, #tablehart {
+    position: relative;
+    width: 100%;
+    height: calc(100% - 50px); 
+    z-index: 2;
+}
+#rchart{
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+.nav-dots {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 1000;
+}
+.nav-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: background 0.3s;
+}
+.nav-dot.active {
+    background: rgba(0, 0, 0, 0.8);
+}

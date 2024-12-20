@@ -10,11 +10,11 @@ const swheight = 700;
 const chartWidth = swwidth - swmargin.left - swmargin.right;
 const chartHeight = swheight - swmargin.top - swmargin.bottom;
 
-// 设置半径
+
 const swinnerRadius = chartHeight * 0.2;
 const swouterRadius = Math.min(chartWidth, chartHeight) * 0.75;
 
-// 创建SVG
+
 const swsvg = d3.select("#swchart")
     .append("svg")
     .attr("width", chartWidth)
@@ -22,22 +22,22 @@ const swsvg = d3.select("#swchart")
     .append("g")
     .attr("transform", `translate(${chartWidth/3},${chartHeight/2})`);
 
-// 定义颜色
+
 const colors = {
     Gold: "#1E90FF",
     Silver: "#00BFFF",
     Bronze: "#c1e2ed"
 };
 
-// 创建tooltip
+
 const swtooltip = d3.select("body")
     .append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
 
-// 读取并处理数据
+
 d3.csv("data/swimming.csv").then(function(data) {
-    // 数据类型转换
+
     data.forEach(d => {
         d.Gold = +d.Gold;
         d.Silver = +d.Silver;
@@ -45,21 +45,21 @@ d3.csv("data/swimming.csv").then(function(data) {
         d.Total = +d.Total;
     });
 
-    // 排序并获取前20名
+
     data = data.sort((a, b) => b.Total - a.Total).slice(0, 20);
 
-    // 创建半圆的角度比例尺
+
     const x = d3.scaleBand()
         .domain(data.map(d => d.Name))
         .range([Math.PI/4, Math.PI+Math.PI/4])
         .padding(0.1);
 
-    // 创建线性的半径比例尺
+  
     const y = d3.scaleLinear()
         .domain([0, d3.max(data, d => d.Total)])
         .range([swinnerRadius, swouterRadius]);
 
-    // 创建堆叠数据
+ 
     const stack = d3.stack()
         .keys([ "Gold","Silver","Bronze" ])
         .order(d3.stackOrderNone)
@@ -67,7 +67,7 @@ d3.csv("data/swimming.csv").then(function(data) {
 
     const series = stack(data);
 
-    // 创建圆角弧生成器
+
     const arc = d3.arc()
         .innerRadius(d => y(d[0]))
         .outerRadius(d => y(d[1]))
@@ -77,7 +77,7 @@ d3.csv("data/swimming.csv").then(function(data) {
         .padRadius(swinnerRadius)
         .cornerRadius(4);
 
-    // 绘制堆叠的弧
+
     swsvg.selectAll("g")
         .data(series)
         .join("g")
@@ -103,7 +103,7 @@ d3.csv("data/swimming.csv").then(function(data) {
         });
 
 
-    // 添加图例
+
     const legend = swsvg.append("g")
         .attr("transform", `translate(${0},${50})`);
 

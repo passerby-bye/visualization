@@ -1,16 +1,15 @@
 const width = 1900;
 const height = width/2+100;
-const innerRadius = 200;  // 增加内圆半径
-const outerRadius = 400;  // 增加外圆半径
+const innerRadius = 200;  
+const outerRadius = 400;  
 
-// 创建具有渐变背景的SVG
+
 const svg = d3.create("svg")
     .attr("width", width)
     .attr("height", height)
     .attr("viewBox", [-width / 2, -height/2, width, height])
     .attr("style", "width: 100%; height: auto; font: 14px 'Helvetica Neue', sans-serif;"); // 改进字体
 
-// 添加渐变背景
 const defs = svg.append("defs");
 const gradient = defs.append("radialGradient")
     .attr("id", "background-gradient")
@@ -25,7 +24,7 @@ gradient.append("stop")
     .attr("offset", "100%")
     .attr("style", "stop-color: #ECECE9; stop-opacity: 1");
 
-// 添加背景圆
+
 svg.append("circle")
     .attr("r", outerRadius + 100)
     .attr("stroke","#000")
@@ -52,15 +51,15 @@ async function loadData() {
             .outerRadius(d => y(d[1]))
             .startAngle(d => x(d.data[0]))
             .endAngle(d => x(d.data[0]) + x.bandwidth())
-            .padAngle(2 / innerRadius)  // 增加间隔
+            .padAngle(2 / innerRadius)  
             .padRadius(innerRadius);
     
-        // 优化角度比例尺
+
         const x = d3.scaleBand()
             .domain(data.map(d => d.year))
             .range([0, 2 * Math.PI])
             .align(0)
-            .padding(0.1);  // 添加padding
+            .padding(0.1);  
     
         const y = d3.scaleRadial()
             .domain([0, d3.max(series, d => d3.max(d, d => d[1]))])
@@ -68,34 +67,33 @@ async function loadData() {
 
         const uniqueKeys = Array.from(new Set(data.map(d => d.name)));
         
-        // 更新配色方案
+    
         const color = d3.scaleOrdinal()
             .domain(uniqueKeys)
             .range([
-                "#2E4057",  // 深蓝灰
-                "#048BA8",  // 青蓝
-                "#16DB93",  // 绿松石
-                "#EFEA5A",  // 柠檬黄
-                "#F29E4C",  // 橙色
-                "#F25C54",  // 珊瑚红
-                "#A06CD5",  // 紫色
-                "#6247AA",  // 深紫
-                "#102542",  // 海军蓝
-                "#dc2626"   // 暖灰
+                "#2E4057",  
+                "#048BA8",  
+                "#16DB93",  
+                "#EFEA5A",  
+                "#F29E4C",  
+                "#F25C54",  
+                "#A06CD5",  
+                "#6247AA",  
+                "#102542",  
+                "#dc2626"   
             ])
             .unknown("#ddd");
     
         const formatValue = x => isNaN(x) ? "N/A" : x.toLocaleString("en")
         const regions = [...new Set(data.map(d => d.name))]; 
-        
-        // 优化径向位置计算
+
         const radiusScale = d3.scaleOrdinal()
             .domain(regions)
             .range(d3.range(regions.length).map(i => 
                 100 + y.range()[1] * (0.35 + (i * 0.08))
             ));
 
-        // 添加阴影效果
+
         const shadow = defs.append("filter")
             .attr("id", "shadow")
             .attr("x", "-50%")
@@ -120,7 +118,7 @@ async function loadData() {
         feMerge.append("feMergeNode");
         feMerge.append("feMergeNode").attr("in", "SourceGraphic");
 
-        // 绘制圆点并添加动画效果
+
         svg.append("g")
             .selectAll("circle")
             .data(data)
@@ -129,7 +127,7 @@ async function loadData() {
             .attr("filter", "url(#shadow)")
             .attr("cx", d => radiusScale(d.name) * Math.cos((x(d.year) + x.bandwidth() / 2) - Math.PI / 2))
             .attr("cy", d => radiusScale(d.name) * Math.sin((x(d.year) + x.bandwidth() / 2) - Math.PI / 2))    
-            .attr("r", 0)  // 初始半径为0
+            .attr("r", 0)  
             .style("cursor", "pointer")
             .on("mouseover", function(event, d) {
                 tooltip.transition()
@@ -145,35 +143,32 @@ async function loadData() {
                 `)
                     .style("left", (event.pageX + 10) + "px")
                     .style("top", (event.pageY - 28) + "px");
-                
-                // 突出显示当前圆点
+
                 d3.select(this)
                     .transition()
                     .duration(200)
                     .attr("fill-opacity", 1)
-                    .attr("r", d => Math.sqrt(d.population) * 0.7); // 略微放大
+                    .attr("r", d => Math.sqrt(d.population) * 0.7); 
             })
             .on("mouseout", function(event, d) {
                 tooltip.transition()
                     .duration(500)
                     .style("opacity", 0);
                 
-                // 恢复圆点原始状态
+                // to orinigal state
                 d3.select(this)
                     .transition()
                     .duration(200)
                     .attr("fill-opacity", 0.8)
                     .attr("r", d => Math.sqrt(d.population) * 0.6);
             })
-            .transition()  // 添加过渡动画
+            .transition()  
             .duration(1000)
             .delay((d, i) => i * 10)
-            .attr("r", d => Math.sqrt(d.population) * 0.6)  // 增大圆点尺寸
-            .attr("opacity", 0.8)  // 添加透明度
+            .attr("r", d => Math.sqrt(d.population) * 0.6)  
+            .attr("opacity", 0.8) 
             .style("transition", "all 0.3s ease");
 
-                
-        // 添加交互式提示框
         const tooltip = d3.select("body").append("div")
             .attr("class", "tooltip")
             .style("position", "absolute")
@@ -186,37 +181,36 @@ async function loadData() {
             .style("box-shadow", "0 2px 4px rgba(0,0,0,0.1)")
             .style("font-size", "12px");
 
-        // 优化坐标轴样式
+
         const axisGroup = svg.append("g")
             .attr("text-anchor", "middle")
             .selectAll()
             .data(x.domain())
             .join("g")
-                        .on("click", function(event, d) { // 添加点击事件
-                // 在这里处理点击事件
+                        .on("click", function(event, d) { 
+  
                 console.log(`Clicked on: ${d}`);
                 window.selectedYear = d;
                 loadData();
 
               })
-              .on("mouseover", function(event, d) { // 添加鼠标悬停事件
-                d3.select(this).select("text").attr("fill", "blue"); // 改变文本颜色
+              .on("mouseover", function(event, d) { 
+                d3.select(this).select("text").attr("fill", "blue"); 
             })
-            .on("mouseout", function(event, d) { // 添加鼠标移出事件
-                d3.select(this).select("text").attr("fill", "black"); // 恢复文本颜色
+            .on("mouseout", function(event, d) {
+                d3.select(this).select("text").attr("fill", "black");
             })
             .attr("transform", d => `
                 rotate(${((x(d) + x.bandwidth() / 2) * 180 / Math.PI - 90)})
                 translate(${innerRadius},0)
             `);
 
-        // 添加坐标轴线
+
         axisGroup.append("line")
             .attr("x2", -5)
             .attr("stroke", "#666")
             .attr("stroke-width", 1.5);
 
-        // 优化坐标轴文本
         axisGroup.append("text")
             .attr("class", "label")
             .attr("transform", d => (x(d) + x.bandwidth() / 2 + Math.PI / 2) % (2 * Math.PI) < Math.PI
@@ -226,18 +220,17 @@ async function loadData() {
             .attr("font-weight", 500)
             .text(d => d);
 
-        // 优化图例样式
         const legend = svg.append("g")
-            .attr("transform", "translate(-40, -100)")  // 调整图例位置
+            .attr("transform", "translate(-40, -100)")  
             .selectAll()
             .data(color.domain())
             .join("g")
-            .attr("transform", (d, i) => `translate(0,${i * 25})`);  // 增加图例间距
+            .attr("transform", (d, i) => `translate(0,${i * 25})`);  
 
         legend.append("rect")
             .attr("width", 16)
             .attr("height", 16)
-            .attr("rx", 2)  // 添加圆角
+            .attr("rx", 2)  
             .attr("fill", color)
             .attr("filter", "url(#shadow)");
 

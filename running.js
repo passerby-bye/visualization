@@ -1,5 +1,4 @@
 d3.csv("data/running.csv").then(function(data) {
-    // 处理并排序数据
     const rprocessedData = data
         .map(d => ({
             name: d.Name,
@@ -17,20 +16,17 @@ d3.csv("data/running.csv").then(function(data) {
 });
 
 function rcreateChart(data) {
-    // 设置图表尺寸和边距
+
     const rmargin = {top: 30, right: 100, bottom: 30, left: 150};
     const rwidth = 900 - rmargin.left - rmargin.right;
     const rheight = 600 - rmargin.top - rmargin.bottom;
     
-    // 创建SVG容器
     const rsvg = d3.select("#rchart")
         .append("svg")
         .attr("width", rwidth + rmargin.left + rmargin.right)
         .attr("height", rheight + rmargin.top + rmargin.bottom)
         .append("g")
         .attr("transform", `translate(${rmargin.left},${rmargin.top})`);
-    
-    // 创建比例尺
     const ry = d3.scaleBand()
         .domain(data.map(d => d.name))
         .range([0, rheight])
@@ -40,7 +36,6 @@ function rcreateChart(data) {
         .domain([0, d3.max(data, d => d.total)])
         .range([0, rwidth]);
     
-    // 添加赛道背景
     rsvg.selectAll("rect.track-lane")
         .data(data)
         .join("rect")
@@ -50,15 +45,12 @@ function rcreateChart(data) {
         .attr("width", rwidth)
         .attr("height", ry.bandwidth())
         .attr("fill", "#f0f0f0");
-
-    // 创建分组来容纳不同类型的奖牌
     const barGroups = rsvg.selectAll(".bar-group")
         .data(data)
         .join("g")
         .attr("class", "bar-group")
         .attr("transform", d => `translate(0,${ry(d.name)})`);
 
-    // 绘制金牌
     barGroups.append("rect")
         .attr("class", "medal gold")
         .attr("x", 0)
@@ -67,7 +59,6 @@ function rcreateChart(data) {
         .attr("height", ry.bandwidth())
         .attr("fill", "#FFD700");
 
-    // 绘制银牌
     barGroups.append("rect")
         .attr("class", "medal silver")
         .attr("x", d => rx(d.gold))
@@ -76,7 +67,6 @@ function rcreateChart(data) {
         .attr("height", ry.bandwidth())
         .attr("fill", "#C0C0C0");
 
-    // 绘制铜牌
     barGroups.append("rect")
         .attr("class", "medal bronze")
         .attr("x", d => rx(d.gold + d.silver))
@@ -85,22 +75,14 @@ function rcreateChart(data) {
         .attr("height", ry.bandwidth())
         .attr("fill", "#CD7F32");
 
-    // 添加运动员姓名标签
+
     rsvg.append("g")
         .attr("class", "y-axis")
         .call(d3.axisLeft(ry))
         .selectAll(".domain, .tick line")
         .remove();
 
-    // // 添加总数标签
-    // barGroups.append("text")
-    //     .attr("x", d => rx(d.total) + 5)
-    //     .attr("y", ry.bandwidth() / 2)
-    //     .attr("dy", "0.35em")
-    //     .text(d => `总数: ${d.total}`)
-    //     .attr("fill", "#333");
 
-    // 添加图例
     const rlegend = rsvg.append("g")
         .attr("class", "legend")
         .attr("transform", `translate(${rwidth + 10}, 0)`);
@@ -128,7 +110,6 @@ function rcreateChart(data) {
         .text(d => d.name)
         .attr("fill", "#333");
 
-    // 添加交互提示
     const rtooltip = d3.select("body")
         .append("div")
         .attr("class", "tooltip")

@@ -1,48 +1,48 @@
 
 let selectedCountry = null;
-let selectedMedalType = 'Gold_Medal_Count'; // 默认显示金牌数量
+let selectedMedalType = 'Gold_Medal_Count'; 
 
-// 创建SVG
+
 const svg_map = d3.select("#map-container")
     .append("svg")
     .attr("width", 1500)
     .attr("height", 600)
-    // .style("background", "linear-gradient(to bottom, #f8f9fa,rgb(241, 241, 241))");
+   
     .style("background", "rgb(236, 236, 233)")
     ;
 
 
-// 创建投影
+// ceeate projection
 const projection = d3.geoMercator()
     .scale(150)
     .translate([630,350]);
 
 const path = d3.geoPath().projection(projection);
 
-// 创建颜色比例尺
+
 const total_colorScale = d3.scaleThreshold()
     .domain([0, 1, 5, 15, 30, 50, 70])
     .range([ 
-        "#f1f5f9",  // 无奖牌颜色
-        "#93c5fd",  // 极少奖牌
-        "#60a5fa",  // 少量奖牌
-        "#3b82f6",  // 中等奖牌
-        "#2563eb",  // 较多奖牌
-        "#1d4ed8",  // 很多奖牌
-        "#1e40af",  // 大量奖牌
-        "#1e3a8a"   // 最多奖牌
+        "#f1f5f9",  // 0
+        "#93c5fd",  
+        "#60a5fa",  
+        "#3b82f6",  
+        "#2563eb",  
+        "#1d4ed8",  
+        "#1e40af",  
+        "#1e3a8a"   // maximum
 
     ]);
-// 定义不同奖牌类型的颜色比例尺
+
 const gold_colorScale = d3.scaleThreshold()
     .domain([0, 1, 3, 8, 15, 25, 40])
     .range([
-        "#f1f5f9",  // 无奖牌
+        "#f1f5f9",  // 0
         "#fff7ed",
-        "#FFF9C4",  // 无奖牌
-        "#FFE082",  // 极少金牌
-        "#FFD700",  // 少量金牌
-        "#DAA520",  // 中等金牌
+        "#FFF9C4",  
+        "#FFE082",  
+        "#FFD700",  
+        "#DAA520",  
         "#fb923c",
 
     ]);
@@ -50,35 +50,29 @@ const gold_colorScale = d3.scaleThreshold()
 const silver_colorScale = d3.scaleThreshold()
     .domain([0, 1, 3, 8, 15, 25, 40])
     .range([
-        "#f1f5f9",  // 无奖牌
-        "#f8fafc",  // 极少银牌
-        "#e2e8f0",  // 少量银牌
-        "#cbd5e1",  // 中等银牌
-        "#94a3b8",  // 较多银牌
-        "#64748b",  // 很多银牌
-        "#475569",  // 大量银牌
-        "#334155"   // 最多银牌
+        "#f1f5f9",  
+        "#f8fafc",  
+        "#e2e8f0",  
+        "#cbd5e1",  
+        "#94a3b8",  
+        "#64748b",  
+        "#475569",  
+        "#334155"   
     ]);
 
 const bronze_colorScale = d3.scaleThreshold()
     .domain([0, 1, 3, 8, 15, 25, 40])
     .range([
-        "#f1f5f9",  // 无奖牌
-        "#fef2f2",  // 极少铜牌
-        "#fee2e2",  // 少量铜牌
-        "#fecaca",  // 中等铜牌
-        "#fca5a5",  // 较多铜牌
-        "#f87171",  // 很多铜牌
-        "#ef4444",  // 大量铜牌
-        "#dc2626"   // 最多铜牌
+        "#f1f5f9",  
+        "#fef2f2",  
+        "#fee2e2",  
+        "#fecaca",  
+        "#fca5a5",  
+        "#f87171",  
+        "#ef4444",  
+        "#dc2626"   
     ]);
-// 奖牌类型配置
-// const medalTypes = {
-//     'Gold_Medal_Count': { name: 'Gold Medals', color: '#FFD700' },
-//     'Silver_Medal_Count': { name: 'Silver Medals', color: '#C0C0C0' },
-//     'Bronze_Medal_Count': { name: 'Bronze Medals', color: '#CD7F32' },
-//     'Medal_Count': { name: 'Total Medals', color: '#4682B4' }
-// };
+
 const medalTypes = {
     'Gold_Medal_Count': { 
         name: 'Gold Medals', 
@@ -101,43 +95,37 @@ const medalTypes = {
         textColor: '#2C5282'
     }
 };
-// 创建tooltip
+
 const tooltip = d3.select("body")
     .append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
 
-// 全局变量
+
 let worldData, medalData;
 let years = [];
 
-// 添加加载提示
+
 const loadingDiv = d3.select("body")
     .append("div")
     .attr("class", "loading")
     .text("Loading data...");
 
-// 创建图例
+
 function createLegend() {
-    // const legend = d3.select(".legend");
+
     const legend = d3.select(".legend")
     .style("background", "rgba(255, 255, 255, 0.95)")
     .style("padding", "15px")
     .style("border-radius", "8px")
     .style("box-shadow", "0 2px 4px rgba(0,0,0,0.1)")
     .style("font-family", "'Inter', sans-serif");
-    // const thresholds = [0, 1, 5, 15, 30, 50, 70];
+ 
     
-    // // 更新图例标题
+
     const medalInfo = medalTypes[selectedMedalType];
     legend.html(`${medalInfo.name} count: `);
-    // const medalInfo = medalTypes[selectedMedalType];
-    // legend.html(`
-    //     <div  style="font-weight: 600; margin-bottom: 10px; color: ${medalInfo.textColor}">
-    //         ${medalInfo.name} count
-    //     </div>
-    // `);
-    // 添加0奖牌的图例
+
     let thresholds, currentColorScale;
     switch(selectedMedalType) {
         case 'Gold_Medal_Count':
@@ -166,7 +154,7 @@ function createLegend() {
     zeroDiv.append("span")
         .text("0");
     
-    // 添加其他奖牌数的图例
+
     thresholds.forEach((threshold, i) => {
         if (i > 0 && i < thresholds.length - 1) {
             const div = legend.append("div")
@@ -227,10 +215,7 @@ function createMedalTypeSelector() {
         });
     });
 }
-// 颜色计算函数
-// function getColor(medals) {
-//     return colorScale(medals || 0);
-// }
+
 function getColor(medals) {
     const count = medals || 0;
     switch(selectedMedalType) {
@@ -244,10 +229,10 @@ function getColor(medals) {
             return total_colorScale(count);
     }
 }
-// 加载数据
+
 async function loadData() {
     try {
-        // 并行加载世界地图数据和奖牌数据
+
         const [worldGeoJson, medalsData] = await Promise.all([
             d3.json('https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson'),
             d3.csv('data/medal_counts_by_country_and_year.csv', d => ({
@@ -262,8 +247,7 @@ async function loadData() {
 
         worldData = worldGeoJson;
         medalData = medalsData;
-        
-        // 获取所有年份
+
         years = Array.from(new Set(medalData.map(d => d.Year))).sort();
         
         const yearSelect = document.getElementById('year-select');
@@ -283,7 +267,7 @@ async function loadData() {
     }
 }
 
-// 获取指定年份的奖牌数据
+
 function getMedalData(year) {
     const medals = {};
     medalData
@@ -294,12 +278,11 @@ function getMedalData(year) {
     return medals;
 }
 
-// 更新显示
+
 function updateDisplay() {
     const selectedYear = parseInt(document.getElementById('year-select').textContent);
     const medals = getMedalData(selectedYear);
 
-    // 更新地图颜色和边框
     svg_map.selectAll("path")
         .data(worldData.features)
         .join("path")
@@ -308,20 +291,18 @@ function updateDisplay() {
         .transition()
         .duration(300)
         .style("fill", d => {
-            const countryCode = d.id;  // GeoJSON通常使用ISO3代码作为id
+            const countryCode = d.id;  
             const medalCount = medals[countryCode];
             return getColor(medalCount);
         })
         .style("stroke", d => d.id === selectedCountry ? "#000" : "#fff")
         .style("stroke-width", d => d.id === selectedCountry ? "2px" : "0.5px");
 
-    // 添加交互
     svg_map.selectAll("path")
         .on("mouseover", function(event, d) {
             const countryCode = d.id;
             const medalCount = medals[countryCode] || 0;
-            
-            // 高亮效果
+
             if (countryCode !== selectedCountry) {
                 d3.select(this)
                     .style("stroke", "#000")
@@ -337,7 +318,7 @@ function updateDisplay() {
                 .style("top", (event.pageY - 28) + "px");
         })
         .on("mouseout", function(event, d) {
-            // 如果不是选中的国家，恢复默认样式
+
             if (d.id !== selectedCountry) {
                 d3.select(this)
                     .style("stroke", "#fff")
@@ -351,22 +332,21 @@ function updateDisplay() {
         .on("click", function(event, d) {
             const countryCode = d.id;
             
-            // 如果点击已选中的国家，取消选中
+
             if (selectedCountry === countryCode) {
                 selectedCountry = null;
                 svg_map.selectAll("path")
                     .style("stroke", "#fff")
                     .style("stroke-width", "0.5px");
             } else {
-                // 选中新的国家
+
                 selectedCountry = countryCode;
-                
-                // 重置所有国家的样式
+
                 svg_map.selectAll("path")
                     .style("stroke", "#fff")
                     .style("stroke-width", "0.5px");
                 
-                // 设置选中国家的样式
+
                 d3.select(this)
                     .style("stroke", "#000")
                     .style("stroke-width", "2px");
@@ -374,7 +354,7 @@ function updateDisplay() {
         });
 }
 
-// 初始加载
+
 createMedalTypeSelector();
 createLegend();
 loadData();
