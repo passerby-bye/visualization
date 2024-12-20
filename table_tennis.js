@@ -70,10 +70,10 @@ function createTableChart(data) {
             ttooltip.transition()
                 .duration(200)
                 .style("opacity", .9);
-            ttooltip.html(`${d.name}<br/>总奖牌: ${d.total}<br/>
-                金牌: ${d.gold}<br/>
-                银牌: ${d.silver}<br/>
-                铜牌: ${d.bronze}`)
+            ttooltip.html(`${d.name}<br/>Total: ${d.total}<br/>
+                Gold: ${d.gold}<br/>
+                Silver: ${d.silver}<br/>
+                Bronze: ${d.bronze}`)
                 .style("left", (event.pageX + 10) + "px")
                 .style("top", (event.pageY - 28) + "px");
         })
