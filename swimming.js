@@ -18,9 +18,9 @@ const swouterRadius = Math.min(chartWidth, chartHeight) * 0.75;
 const swsvg = d3.select("#swchart")
     .append("svg")
     .attr("width", chartWidth)
-    .attr("height", chartHeight )
+    .attr("height", chartHeight)
     .append("g")
-    .attr("transform", `translate(${chartWidth/3},${chartHeight/2})`);
+    .attr("transform", `translate(${chartWidth / 3},${chartHeight / 2})`);
 
 
 const colors = {
@@ -36,7 +36,7 @@ const swtooltip = d3.select("body")
     .style("opacity", 0);
 
 
-d3.csv("data/swimming.csv").then(function(data) {
+d3.csv("data/swimming.csv").then(function (data) {
 
     data.forEach(d => {
         d.Gold = +d.Gold;
@@ -51,17 +51,17 @@ d3.csv("data/swimming.csv").then(function(data) {
 
     const x = d3.scaleBand()
         .domain(data.map(d => d.Name))
-        .range([Math.PI/4, Math.PI+Math.PI/4])
+        .range([Math.PI / 4, Math.PI + Math.PI / 4])
         .padding(0.1);
 
-  
+
     const y = d3.scaleLinear()
         .domain([0, d3.max(data, d => d.Total)])
         .range([swinnerRadius, swouterRadius]);
 
- 
+
     const stack = d3.stack()
-        .keys([ "Gold","Silver","Bronze" ])
+        .keys(["Gold", "Silver", "Bronze"])
         .order(d3.stackOrderNone)
         .offset(d3.stackOffsetNone);
 
@@ -86,7 +86,7 @@ d3.csv("data/swimming.csv").then(function(data) {
         .data(d => d)
         .join("path")
         .attr("d", arc)
-        .on("mouseover", function(event, d) {
+        .on("mouseover", function (event, d) {
             const medalType = d3.select(this.parentNode).datum().key;
             const value = d[1] - d[0];
             swtooltip.transition()
@@ -96,7 +96,7 @@ d3.csv("data/swimming.csv").then(function(data) {
                 .style("left", (event.pageX + 10) + "px")
                 .style("top", (event.pageY - 28) + "px");
         })
-        .on("mouseout", function() {
+        .on("mouseout", function () {
             swtooltip.transition()
                 .duration(500)
                 .style("opacity", 0);

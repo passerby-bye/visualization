@@ -22,23 +22,29 @@
     <h1>Visualization of Summer Olympics</h1>
     <div class="wrapper">
         <div class="instruction-text">hover and click this circle to select year</div>
-    <div class="container">
-        <!-- <div class="view-buttons-container">
+        <div class="container">
+            <!-- <div class="view-buttons-container">
         </div> -->
-        <div class="visualization-container">
-            
-            <div id="chart">
-                <!-- <h2>Participation in the Summer Olympics by Continent and Year</h2> -->
+            <div class="visualization-container">
+
+                <div id="chart">
+                    <!-- <h2>Participation in the Summer Olympics by Continent and Year</h2> -->
+                </div>
+                <div id="controls">
+                    <div id="map-container">
+                        <div class="header-container">
+                            <h2 id="year-select"></h2>
+                            <h2>Olympic Nations Medal Mapper</h2>
+                        </div>
+                    </div>
+
+                    <div id="medal-type-select" class="medal-selector"></div>
+                    <div class="legend"></div>
+                </div>
+
             </div>
-            <div id="controls">
-                <div id="map-container"><div class="header-container"><h2 id="year-select"></h2><h2>Olympic Nations Medal Mapper</h2></div></div>
-                
-                <div id="medal-type-select" class="medal-selector"></div>
-                <div class="legend"></div>
-            </div>
-            
         </div>
-    </div></div>
+    </div>
 
     <!-- 新的仪表板部分 -->
     <div class="dashboard-container">
@@ -90,10 +96,10 @@
                 <img src="resource/table_tennis.svg" alt="SVG Image" width="400" height="400">
                 <div id="tablehart"></div>
             </div>
-            
+
             <div class="nav-arrow left"></div>
             <div class="nav-arrow right"></div>
-            
+
             <div class="nav-dots">
                 <div class="nav-dot active"></div>
                 <div class="nav-dot"></div>
@@ -105,7 +111,7 @@
     </div>
 
 
-   
+
 
     <div id="stats"></div>
     <script src="https://unpkg.com/d3-weighted-voronoi@1.1.3/build/d3-weighted-voronoi.js"></script>
@@ -131,34 +137,34 @@
 
         // 初始化函数
         async function initializeData() {
-    try {
-        // 使用 Fetch API 从服务器加载 CSV 文件
-        const response = await fetch('medals_total.csv');
-        
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            try {
+                // 使用 Fetch API 从服务器加载 CSV 文件
+                const response = await fetch('medals_total.csv');
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const csvText = await response.text();
+                const result = Papa.parse(csvText, {
+                    header: true,
+                    skipEmptyLines: true
+                });
+
+                countryData = result.data;
+                initializeUI();
+
+                // 将国家代码数据暴露给全局，供其他脚本使用
+                window.getSelectedCountryCode = () => selectedCountryCode;
+                window.getAllCountryCodes = () => countryData.map(row => row.country_code);
+
+            } catch (error) {
+                console.error('Error loading country data:', error);
+                // 显示错误信息给用户
+                document.getElementById('countryContainer').innerHTML =
+                    '<div class="error">Error loading country data</div>';
+            }
         }
-
-        const csvText = await response.text();
-        const result = Papa.parse(csvText, {
-            header: true,
-            skipEmptyLines: true
-        });
-
-        countryData = result.data;
-        initializeUI();
-
-        // 将国家代码数据暴露给全局，供其他脚本使用
-        window.getSelectedCountryCode = () => selectedCountryCode;
-        window.getAllCountryCodes = () => countryData.map(row => row.country_code);
-
-    } catch (error) {
-        console.error('Error loading country data:', error);
-        // 显示错误信息给用户
-        document.getElementById('countryContainer').innerHTML = 
-            '<div class="error">Error loading country data</div>';
-    }
-}
 
 
         const container = document.getElementById('countryContainer');
@@ -185,7 +191,7 @@
             document.querySelectorAll('.country-circle').forEach((circle, index) => {
                 circle.classList.toggle('selected', index === selectedIndex);
             });
-            
+
             if (countryData && countryData[selectedIndex]) {
                 selectedCountryCode = countryData[selectedIndex].country_code;
                 // 触发自定义事件，通知其他可能监听的脚本
@@ -206,51 +212,51 @@
         }
         document.addEventListener('DOMContentLoaded', initializeData);
         let currentIndex = 0;
-const containers = ['.swcontainer', '.rcontainer', '.tablecontainer'];
-const totalContainers = containers.length;
+        const containers = ['.swcontainer', '.rcontainer', '.tablecontainer'];
+        const totalContainers = containers.length;
 
-function updateNavigation() {
-    // 更新箭头显示状态
-    document.querySelector('.nav-arrow.left').style.display = currentIndex > 0 ? 'flex' : 'none';
-    document.querySelector('.nav-arrow.right').style.display = currentIndex < totalContainers - 1 ? 'flex' : 'none';
-    
-    // 更新容器位置
-    containers.forEach((container, index) => {
-        const elem = document.querySelector(container);
-        elem.style.transform = `translateX(${(index - currentIndex) * 100}%)`;
-    });
-    
-    // 更新导航点
-    document.querySelectorAll('.nav-dot').forEach((dot, index) => {
-        dot.classList.toggle('active', index === currentIndex);
-    });
-}
+        function updateNavigation() {
+            // 更新箭头显示状态
+            document.querySelector('.nav-arrow.left').style.display = currentIndex > 0 ? 'flex' : 'none';
+            document.querySelector('.nav-arrow.right').style.display = currentIndex < totalContainers - 1 ? 'flex' : 'none';
 
-// 添加箭头点击事件
-document.querySelector('.nav-arrow.right').addEventListener('click', () => {
-    if (currentIndex < totalContainers - 1) {
-        currentIndex++;
+            // 更新容器位置
+            containers.forEach((container, index) => {
+                const elem = document.querySelector(container);
+                elem.style.transform = `translateX(${(index - currentIndex) * 100}%)`;
+            });
+
+            // 更新导航点
+            document.querySelectorAll('.nav-dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentIndex);
+            });
+        }
+
+        // 添加箭头点击事件
+        document.querySelector('.nav-arrow.right').addEventListener('click', () => {
+            if (currentIndex < totalContainers - 1) {
+                currentIndex++;
+                updateNavigation();
+            }
+        });
+
+        document.querySelector('.nav-arrow.left').addEventListener('click', () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateNavigation();
+            }
+        });
+
+        // 添加导航点点击事件
+        document.querySelectorAll('.nav-dot').forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                currentIndex = index;
+                updateNavigation();
+            });
+        });
+
+        // 初始化导航状态
         updateNavigation();
-    }
-});
-
-document.querySelector('.nav-arrow.left').addEventListener('click', () => {
-    if (currentIndex > 0) {
-        currentIndex--;
-        updateNavigation();
-    }
-});
-
-// 添加导航点点击事件
-document.querySelectorAll('.nav-dot').forEach((dot, index) => {
-    dot.addEventListener('click', () => {
-        currentIndex = index;
-        updateNavigation();
-    });
-});
-
-// 初始化导航状态
-updateNavigation();
 
     </script>
 </body>

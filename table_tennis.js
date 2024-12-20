@@ -1,4 +1,4 @@
-d3.csv("data/table_tennis.csv").then(function(data) {
+d3.csv("data/table_tennis.csv").then(function (data) {
     const processedData = data
         .map(d => ({
             name: d.Name,
@@ -9,7 +9,7 @@ d3.csv("data/table_tennis.csv").then(function(data) {
         }))
         .sort((a, b) => b.total - a.total)
         .slice(0, 20);
-    
+
     createTableChart(processedData);
 }).catch(error => {
     console.error("Error loading table tennis data:", error);
@@ -51,7 +51,7 @@ function createTableChart(data) {
         .attr("class", "tooltip")
         .style("opacity", 0);
 
- 
+
     const tnodes = tsvg.selectAll(".node")
         .data(data)
         .join("g")
@@ -66,7 +66,7 @@ function createTableChart(data) {
         .attr("r", d => tradiusScale(d.total))
         .attr("fill", d => tcolorScale(d.total))
         .attr("opacity", 0.7)
-        .on("mouseover", function(event, d) {
+        .on("mouseover", function (event, d) {
             ttooltip.transition()
                 .duration(200)
                 .style("opacity", .9);
@@ -77,13 +77,13 @@ function createTableChart(data) {
                 .style("left", (event.pageX + 10) + "px")
                 .style("top", (event.pageY - 28) + "px");
         })
-        .on("mouseout", function() {
+        .on("mouseout", function () {
             ttooltip.transition()
                 .duration(500)
                 .style("opacity", 0);
         });
 
- 
+
     tnodes.append("text")
         .attr("class", "athlete-name")
         .attr("text-anchor", "middle")
@@ -116,8 +116,8 @@ function createTableChart(data) {
 
 
     const tlegendData = [
-        {value: d3.min(data, d => d.total), label: "Minimum"},
-        {value: d3.max(data, d => d.total), label: "Maximum"}
+        { value: d3.min(data, d => d.total), label: "Minimum" },
+        { value: d3.max(data, d => d.total), label: "Maximum" }
     ];
 
     const tlegend = tsvg.append("g")

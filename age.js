@@ -11,7 +11,7 @@ const radius = Math.min(genderWidth, genderHeight) / 2 - genderMargin;
 
 const voronoiWidth = 250;
 const voronoiHeight = 280;
-const voronoiRadius = Math.min(voronoiWidth, voronoiHeight) / 2 ;
+const voronoiRadius = Math.min(voronoiWidth, voronoiHeight) / 2;
 const voronoiCenter = [voronoiWidth / 2, voronoiHeight / 2];
 
 const chartStyles = {
@@ -24,7 +24,7 @@ const chartStyles = {
 const agesvg = d3.select("#agechart")
     .append("svg")
     .attr("width", agewidth + margin.left + margin.right)
-    .attr("height", ageheight + 2*margin.top + 2*margin.bottom)
+    .attr("height", ageheight + 2 * margin.top + 2 * margin.bottom)
     .append("g")
     .attr("rx", 8)
     .attr("transform", `translate(${margin.left},${margin.top})`);
@@ -78,12 +78,12 @@ const sportColorMap = new Map();
 
 function initializeSportColors(data) {
 
-    const allSports = [...new Set(data.map(d => d.Sport))].filter(sport => sport); 
+    const allSports = [...new Set(data.map(d => d.Sport))].filter(sport => sport);
     console.log('All unique sports:', allSports);
 
-   
+
     allSports.forEach((sport, index) => {
-        if (sport) { 
+        if (sport) {
             sportColorMap.set(sport, COLOR_RANGE[index % COLOR_RANGE.length]);
         }
     });
@@ -170,16 +170,16 @@ Promise.all([
 
     // colorscale for age
     const colorScale = d3.scaleSequential()
-    .domain([10, 60])
-    .interpolator(
-        d3.piecewise(d3.interpolateHcl, [
-            "#ffb4a2",  
-            "#6d597a",  
-            "#06d6a0",  
-            "#ffd166",  
-            "#ef476f"   
-        ])
-    );
+        .domain([10, 60])
+        .interpolator(
+            d3.piecewise(d3.interpolateHcl, [
+                "#ffb4a2",
+                "#6d597a",
+                "#06d6a0",
+                "#ffd166",
+                "#ef476f"
+            ])
+        );
 
     function updateAgeChart(selectedCountry, data) {
         const countryData = data.filter(d => d.NOC === selectedCountry);
@@ -277,7 +277,7 @@ Promise.all([
             .style("font-size", "11px")
             .style("font-weight", "400");
 
- 
+
         legend.append("text")
             .attr("x", legendWidth + 15)
             .attr("y", legendHeight + 5)
@@ -400,7 +400,7 @@ Promise.all([
         agesvg.append("text")
             .attr("class", "title")
             .attr("x", agewidth / 2)
-            .attr("y", -margin.top )
+            .attr("y", -margin.top)
             .text(`Age Distribution of Summer Olympic Athletes - ${selectedCountry}`);
 
         agesvg.append("text")
@@ -408,7 +408,7 @@ Promise.all([
             .attr("x", agewidth / 2)
             .attr("y", ageheight + margin.bottom - 10)
             .style("text-anchor", "middle")
-            .style("font-size", "14px") 
+            .style("font-size", "14px")
             .text("Age Groups");
 
         agesvg.append("text")
@@ -417,28 +417,28 @@ Promise.all([
             .attr("x", -ageheight / 2)
             .attr("y", -margin.left + 20)
             .style("text-anchor", "middle")
-            .style("font-size", "14px") 
+            .style("font-size", "14px")
             .text("Olympic Years");
 
     }
 
     function updateGenderChart(selectedCountry, data) {
         const gtooltip = d3.select("body").append("div")
-    .attr("class", "tooltip")
-    .style("opacity", 0)
-    .style("position", "absolute")
-    .style("background-color", "rgba(255, 255, 255, 0.9)")
-    .style("padding", "8px")
-    .style("border", "1px solid #ddd")
-    .style("border-radius", "4px")
-    .style("font-size", "12px")
-    .style("pointer-events", "none");
+            .attr("class", "tooltip")
+            .style("opacity", 0)
+            .style("position", "absolute")
+            .style("background-color", "rgba(255, 255, 255, 0.9)")
+            .style("padding", "8px")
+            .style("border", "1px solid #ddd")
+            .style("border-radius", "4px")
+            .style("font-size", "12px")
+            .style("pointer-events", "none");
 
         const countryData = data.filter(d => d.NOC === selectedCountry);
 
         const groupedData = d3.group(countryData, d => d.Year);
 
- 
+
         const olympicsData = Array.from(groupedData, ([year, values]) => {
             const genderCounts = d3.group(values, d => d.Sex);
             const maleCount = genderCounts.get('M')?.length || 0;
@@ -458,7 +458,7 @@ Promise.all([
 
         gendersvg.selectAll("*").remove();
 
- 
+
         const angleScale = d3.scaleLinear()
             .domain([0, olympicsData.length])
             .range([0, 2 * Math.PI]);
@@ -491,65 +491,65 @@ Promise.all([
             .curve(d3.curveCardinalClosed.tension(0.7));
 
         gendersvg.append("path")
-        .datum(olympicsData)
-        .attr("fill", "rgba(255, 182, 193, 0.6)")
-        .attr("stroke", "rgba(255, 182, 193, 0.8)")
-        .attr("stroke-width", 1)
-        .attr("d", femaleAreaGenerator)
-        .on("mouseover", function(event, d) {
-            tooltip.transition()
-                .duration(200)
-                .style("opacity", .9);
-        })
-        .on("mousemove", function(event, d) {
-            const [mouseX, mouseY] = d3.pointer(event);
-            const angle = Math.atan2(mouseY, mouseX) + Math.PI / 2;
-            const index = Math.floor((angle + Math.PI * 2) % (Math.PI * 2) / (2 * Math.PI / olympicsData.length));
-            const data = olympicsData[index];
-            
-            gtooltip.html(`Year: ${data.year}<br/>
+            .datum(olympicsData)
+            .attr("fill", "rgba(255, 182, 193, 0.6)")
+            .attr("stroke", "rgba(255, 182, 193, 0.8)")
+            .attr("stroke-width", 1)
+            .attr("d", femaleAreaGenerator)
+            .on("mouseover", function (event, d) {
+                tooltip.transition()
+                    .duration(200)
+                    .style("opacity", .9);
+            })
+            .on("mousemove", function (event, d) {
+                const [mouseX, mouseY] = d3.pointer(event);
+                const angle = Math.atan2(mouseY, mouseX) + Math.PI / 2;
+                const index = Math.floor((angle + Math.PI * 2) % (Math.PI * 2) / (2 * Math.PI / olympicsData.length));
+                const data = olympicsData[index];
+
+                gtooltip.html(`Year: ${data.year}<br/>
                          Female count: ${data.female}<br/>
                          Male count: ${data.male}<br/>
                          Female/Male: ${data.ratio.toFixed(2)}%`)
-                .style("left", (event.pageX + 10) + "px")
-                .style("top", (event.pageY - 10) + "px");
-        })
-        .on("mouseout", function(d) {
-            gtooltip.transition()
-                .duration(500)
-                .style("opacity", 0);
-        });
-    
+                    .style("left", (event.pageX + 10) + "px")
+                    .style("top", (event.pageY - 10) + "px");
+            })
+            .on("mouseout", function (d) {
+                gtooltip.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+            });
 
-    gendersvg.append("path")
-        .datum(olympicsData)
-        .attr("fill", "rgba(128, 128, 128, 0.6)")
-        .attr("stroke", "rgba(128, 128, 128, 0.8)")
-        .attr("stroke-width", 1)
-        .attr("d", maleAreaGenerator)
-        .on("mouseover", function(event, d) {
-            gtooltip.transition()
-                .duration(200)
-                .style("opacity", .9);
-        })
-        .on("mousemove", function(event, d) {
-            const [mouseX, mouseY] = d3.pointer(event);
-            const angle = Math.atan2(mouseY, mouseX) + Math.PI / 2;
-            const index = Math.floor((angle + Math.PI * 2) % (Math.PI * 2) / (2 * Math.PI / olympicsData.length));
-            const data = olympicsData[index];
-            
-            gtooltip.html(`Year: ${data.year}<br/>
+
+        gendersvg.append("path")
+            .datum(olympicsData)
+            .attr("fill", "rgba(128, 128, 128, 0.6)")
+            .attr("stroke", "rgba(128, 128, 128, 0.8)")
+            .attr("stroke-width", 1)
+            .attr("d", maleAreaGenerator)
+            .on("mouseover", function (event, d) {
+                gtooltip.transition()
+                    .duration(200)
+                    .style("opacity", .9);
+            })
+            .on("mousemove", function (event, d) {
+                const [mouseX, mouseY] = d3.pointer(event);
+                const angle = Math.atan2(mouseY, mouseX) + Math.PI / 2;
+                const index = Math.floor((angle + Math.PI * 2) % (Math.PI * 2) / (2 * Math.PI / olympicsData.length));
+                const data = olympicsData[index];
+
+                gtooltip.html(`Year: ${data.year}<br/>
                 Female count: ${data.female}<br/>
                 Male count: ${data.male}<br/>
                 Female/Male: ${data.ratio.toFixed(2)}%`)
-       .style("left", (event.pageX + 10) + "px")
-       .style("top", (event.pageY - 10) + "px");
-})
-        .on("mouseout", function(d) {
-            gtooltip.transition()
-                .duration(500)
-                .style("opacity", 0);
-        });
+                    .style("left", (event.pageX + 10) + "px")
+                    .style("top", (event.pageY - 10) + "px");
+            })
+            .on("mouseout", function (d) {
+                gtooltip.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+            });
 
         gendersvg.append("path")
             .datum(olympicsData)
@@ -656,7 +656,7 @@ Promise.all([
 
         const countryData = data.filter(d => d.NOC === selectedCountry && d.Year === selectedYear);
 
- 
+
         const disciplineCounts = d3.rollup(countryData,
             v => v.length,
             d => d.Sport
@@ -794,7 +794,7 @@ Promise.all([
 
         const years = [...new Set(countryData.map(d => d.Year))].sort();
 
- 
+
         const yearSelector = document.getElementById('yearSelector');
         const yearDisplay = document.getElementById('yearDisplay');
         const yearList = document.getElementById('yearList');
@@ -838,11 +838,11 @@ Promise.all([
 
     const initialYear = initializeYearSlider(countries[0], data);
 
-window.addEventListener('countrySelected', (event) => {
-    const { country, code } = event.detail;
-    console.log(`Selected country: ${country}, NOC code: ${code}`);
-    updateVisualizations(code);
-});
+    window.addEventListener('countrySelected', (event) => {
+        const { country, code } = event.detail;
+        console.log(`Selected country: ${country}, NOC code: ${code}`);
+        updateVisualizations(code);
+    });
 
     updateVisualizations('CHN');
 });

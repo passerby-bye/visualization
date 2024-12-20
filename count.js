@@ -1,13 +1,13 @@
 const width = 1900;
-const height = width/2+100;
-const innerRadius = 200;  
-const outerRadius = 400;  
+const height = width / 2 + 100;
+const innerRadius = 200;
+const outerRadius = 400;
 
 
 const svg = d3.create("svg")
     .attr("width", width)
     .attr("height", height)
-    .attr("viewBox", [-width / 2, -height/2, width, height])
+    .attr("viewBox", [-width / 2, -height / 2, width, height])
     .attr("style", "width: 100%; height: auto; font: 14px 'Helvetica Neue', sans-serif;"); // 改进字体
 
 const defs = svg.append("defs");
@@ -27,8 +27,8 @@ gradient.append("stop")
 
 svg.append("circle")
     .attr("r", outerRadius + 100)
-    .attr("stroke","#000")
-    .attr("stroke-width","2px")
+    .attr("stroke", "#000")
+    .attr("stroke-width", "2px")
     .attr("fill", "url(#background-gradient)");
 
 async function loadData() {
@@ -36,11 +36,11 @@ async function loadData() {
         const data = await d3.csv('data/continent_count.csv', d => ({
             year: d.year,
             name: d.name,
-            population: +d.population  
+            population: +d.population
         }));
 
         const allnames = data.map(d => d.name);
-        
+
         const series = d3.stack()
             .keys(d3.union(data.map(d => d.name)))
             .value(([, D], key) => D.get(key).population)
@@ -51,45 +51,45 @@ async function loadData() {
             .outerRadius(d => y(d[1]))
             .startAngle(d => x(d.data[0]))
             .endAngle(d => x(d.data[0]) + x.bandwidth())
-            .padAngle(2 / innerRadius)  
+            .padAngle(2 / innerRadius)
             .padRadius(innerRadius);
-    
+
 
         const x = d3.scaleBand()
             .domain(data.map(d => d.year))
             .range([0, 2 * Math.PI])
             .align(0)
-            .padding(0.1);  
-    
+            .padding(0.1);
+
         const y = d3.scaleRadial()
             .domain([0, d3.max(series, d => d3.max(d, d => d[1]))])
             .range([innerRadius, outerRadius]);
 
         const uniqueKeys = Array.from(new Set(data.map(d => d.name)));
-        
-    
+
+
         const color = d3.scaleOrdinal()
             .domain(uniqueKeys)
             .range([
-                "#2E4057",  
-                "#048BA8",  
-                "#16DB93",  
-                "#EFEA5A",  
-                "#F29E4C",  
-                "#F25C54",  
-                "#A06CD5",  
-                "#6247AA",  
-                "#102542",  
-                "#dc2626"   
+                "#2E4057",
+                "#048BA8",
+                "#16DB93",
+                "#EFEA5A",
+                "#F29E4C",
+                "#F25C54",
+                "#A06CD5",
+                "#6247AA",
+                "#102542",
+                "#dc2626"
             ])
             .unknown("#ddd");
-    
+
         const formatValue = x => isNaN(x) ? "N/A" : x.toLocaleString("en")
-        const regions = [...new Set(data.map(d => d.name))]; 
+        const regions = [...new Set(data.map(d => d.name))];
 
         const radiusScale = d3.scaleOrdinal()
             .domain(regions)
-            .range(d3.range(regions.length).map(i => 
+            .range(d3.range(regions.length).map(i =>
                 100 + y.range()[1] * (0.35 + (i * 0.08))
             ));
 
@@ -126,10 +126,10 @@ async function loadData() {
             .attr("fill", d => color(d.name))
             .attr("filter", "url(#shadow)")
             .attr("cx", d => radiusScale(d.name) * Math.cos((x(d.year) + x.bandwidth() / 2) - Math.PI / 2))
-            .attr("cy", d => radiusScale(d.name) * Math.sin((x(d.year) + x.bandwidth() / 2) - Math.PI / 2))    
-            .attr("r", 0)  
+            .attr("cy", d => radiusScale(d.name) * Math.sin((x(d.year) + x.bandwidth() / 2) - Math.PI / 2))
+            .attr("r", 0)
             .style("cursor", "pointer")
-            .on("mouseover", function(event, d) {
+            .on("mouseover", function (event, d) {
                 tooltip.transition()
                     .duration(200)
                     .style("opacity", .9);
@@ -148,13 +148,13 @@ async function loadData() {
                     .transition()
                     .duration(200)
                     .attr("fill-opacity", 1)
-                    .attr("r", d => Math.sqrt(d.population) * 0.7); 
+                    .attr("r", d => Math.sqrt(d.population) * 0.7);
             })
-            .on("mouseout", function(event, d) {
+            .on("mouseout", function (event, d) {
                 tooltip.transition()
                     .duration(500)
                     .style("opacity", 0);
-                
+
                 // to orinigal state
                 d3.select(this)
                     .transition()
@@ -162,11 +162,11 @@ async function loadData() {
                     .attr("fill-opacity", 0.8)
                     .attr("r", d => Math.sqrt(d.population) * 0.6);
             })
-            .transition()  
+            .transition()
             .duration(1000)
             .delay((d, i) => i * 10)
-            .attr("r", d => Math.sqrt(d.population) * 0.6)  
-            .attr("opacity", 0.8) 
+            .attr("r", d => Math.sqrt(d.population) * 0.6)
+            .attr("opacity", 0.8)
             .style("transition", "all 0.3s ease");
 
         const tooltip = d3.select("body").append("div")
@@ -187,17 +187,17 @@ async function loadData() {
             .selectAll()
             .data(x.domain())
             .join("g")
-                        .on("click", function(event, d) { 
-  
+            .on("click", function (event, d) {
+
                 console.log(`Clicked on: ${d}`);
                 window.selectedYear = d;
                 loadData();
 
-              })
-              .on("mouseover", function(event, d) { 
-                d3.select(this).select("text").attr("fill", "blue"); 
             })
-            .on("mouseout", function(event, d) {
+            .on("mouseover", function (event, d) {
+                d3.select(this).select("text").attr("fill", "blue");
+            })
+            .on("mouseout", function (event, d) {
                 d3.select(this).select("text").attr("fill", "black");
             })
             .attr("transform", d => `
@@ -221,16 +221,16 @@ async function loadData() {
             .text(d => d);
 
         const legend = svg.append("g")
-            .attr("transform", "translate(-40, -100)")  
+            .attr("transform", "translate(-40, -100)")
             .selectAll()
             .data(color.domain())
             .join("g")
-            .attr("transform", (d, i) => `translate(0,${i * 25})`);  
+            .attr("transform", (d, i) => `translate(0,${i * 25})`);
 
         legend.append("rect")
             .attr("width", 16)
             .attr("height", 16)
-            .attr("rx", 2)  
+            .attr("rx", 2)
             .attr("fill", color)
             .attr("filter", "url(#shadow)");
 

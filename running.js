@@ -1,4 +1,4 @@
-d3.csv("data/running.csv").then(function(data) {
+d3.csv("data/running.csv").then(function (data) {
     const rprocessedData = data
         .map(d => ({
             name: d.Name,
@@ -9,7 +9,7 @@ d3.csv("data/running.csv").then(function(data) {
         }))
         .sort((a, b) => b.total - a.total)
         .slice(0, 20);
-    
+
     rcreateChart(rprocessedData);
 }).catch(error => {
     console.error("Error loading the data:", error);
@@ -17,10 +17,10 @@ d3.csv("data/running.csv").then(function(data) {
 
 function rcreateChart(data) {
 
-    const rmargin = {top: 30, right: 100, bottom: 30, left: 150};
+    const rmargin = { top: 30, right: 100, bottom: 30, left: 150 };
     const rwidth = 900 - rmargin.left - rmargin.right;
     const rheight = 600 - rmargin.top - rmargin.bottom;
-    
+
     const rsvg = d3.select("#rchart")
         .append("svg")
         .attr("width", rwidth + rmargin.left + rmargin.right)
@@ -31,11 +31,11 @@ function rcreateChart(data) {
         .domain(data.map(d => d.name))
         .range([0, rheight])
         .padding(0.3);
-    
+
     const rx = d3.scaleLinear()
         .domain([0, d3.max(data, d => d.total)])
         .range([0, rwidth]);
-    
+
     rsvg.selectAll("rect.track-lane")
         .data(data)
         .join("rect")
@@ -88,9 +88,9 @@ function rcreateChart(data) {
         .attr("transform", `translate(${rwidth + 10}, 0)`);
 
     const medals = [
-        {name: "Gold", color: "#FFD700"},
-        {name: "Silver", color: "#C0C0C0"},
-        {name: "Bronze", color: "#CD7F32"}
+        { name: "Gold", color: "#FFD700" },
+        { name: "Silver", color: "#C0C0C0" },
+        { name: "Bronze", color: "#CD7F32" }
     ];
 
     rlegend.selectAll("rect")
@@ -115,7 +115,7 @@ function rcreateChart(data) {
         .attr("class", "tooltip")
         .style("opacity", 0);
 
-    barGroups.on("mouseover", function(event, d) {
+    barGroups.on("mouseover", function (event, d) {
         rtooltip.transition()
             .duration(200)
             .style("opacity", .9);
@@ -123,9 +123,9 @@ function rcreateChart(data) {
             .style("left", (event.pageX + 10) + "px")
             .style("top", (event.pageY - 28) + "px");
     })
-    .on("mouseout", function() {
-        rtooltip.transition()
-            .duration(500)
-            .style("opacity", 0);
-    });
+        .on("mouseout", function () {
+            rtooltip.transition()
+                .duration(500)
+                .style("opacity", 0);
+        });
 }
