@@ -1,16 +1,27 @@
 // 设置图表尺寸和边距
-const margin = { top:100, right: 40, bottom: 60, left: 60 };
-const agewidth = 1200 - margin.left - margin.right;
+// const margin = { top:100, right: 40, bottom: 60, left: 60 };
+// const agewidth = 1200 - margin.left - margin.right;
+// const ageheight = 800 - margin.top - margin.bottom;
+const margin = { top: 100, right: 30, bottom: 70, left: 70 };
+const agewidth = 800 - margin.left - margin.right;
 const ageheight = 800 - margin.top - margin.bottom;
 
 // 设置性别分布图的尺寸
-const genderWidth = 800;
-const genderHeight = 800;
-const genderMargin = 60;
+// const genderWidth = 800;
+// const genderHeight = 800;
+// const genderMargin = 60;
+// const radius = Math.min(genderWidth, genderHeight) / 2 - genderMargin;
+const genderWidth = 320;
+const genderHeight = 320;
+const genderMargin = 40;
 const radius = Math.min(genderWidth, genderHeight) / 2 - genderMargin;
-const voronoiWidth = 800;
-const voronoiHeight = 800;
-const voronoiRadius = Math.min(voronoiWidth, voronoiHeight) / 2 - 40;
+
+// const voronoiWidth = 800;
+// const voronoiHeight = 800;
+// const voronoiRadius = Math.min(voronoiWidth, voronoiHeight) / 2 - 40;
+const voronoiWidth = 250;
+const voronoiHeight = 280;
+const voronoiRadius = Math.min(voronoiWidth, voronoiHeight) / 2 ;
 const voronoiCenter = [voronoiWidth / 2, voronoiHeight / 2];
 // 创建年龄分布SVG容器
 const chartStyles = {
@@ -23,7 +34,7 @@ const chartStyles = {
 const agesvg = d3.select("#agechart")
     .append("svg")
     .attr("width", agewidth + margin.left + margin.right)
-    .attr("height", ageheight + margin.top + margin.bottom)
+    .attr("height", ageheight + 2*margin.top + 2*margin.bottom)
     .append("g")
     .attr("rx", 8)
     .attr("transform", `translate(${margin.left},${margin.top})`);
@@ -226,7 +237,7 @@ Promise.all([
         // 设置比例尺
         const xScale = d3.scalePoint()
             .domain(ageGroups.map(d => d.label))
-            .range([0, width])
+            .range([0, agewidth])
             .padding(0.5);
 
         const yScale = d3.scaleLinear()
@@ -237,7 +248,7 @@ Promise.all([
         const maxCount = d3.max(aggregatedData, d => d.count);
         const radiusScale = d3.scaleSqrt()
             .domain([1, maxCount])
-            .range([4, 28])
+            .range([2, 10])
             .clamp(true);
 
         // 清除现有的图形
@@ -333,34 +344,6 @@ Promise.all([
             .attr("y1", d => yScale(d))
             .attr("y2", d => yScale(d));
 
-        // 垂直网格线
-        // const xGridLines = agesvg.selectAll(".x-grid")
-        //     .data(ageGroups.map(d => d.label));
-
-        // xGridLines.exit()
-        //     .transition()
-        //     .duration(500)
-        //     .style("opacity", 0)
-        //     .remove();
-
-        // const xGridEnter = xGridLines.enter()
-        //     .append("line")
-        //     .attr("class", "grid x-grid")
-        //     .style("opacity", 0)
-        //     .attr("y1", 0)
-        //     .attr("y2", ageheight);
-
-        // xGridLines.merge(xGridEnter)
-        //     .transition()
-        //     .duration(1000)
-        //     .style("opacity", 1)
-        //     .attr("x1", d => xScale(d))
-        //     .attr("x2", d => xScale(d))
-        //     .attr("y1", 0)
-        //     .attr("y2", ageheight);
-
-        // 添加坐标轴（带动画）
-        // X轴
         const xAxis = d3.axisBottom(xScale);
         const xAxisGroup = agesvg.selectAll(".x-axis")
             .data([null]);
@@ -378,7 +361,7 @@ Promise.all([
             .attr("transform", "rotate(-45)")
             .style("text-anchor", "end");
 
-        // Y轴
+
         const yAxis = d3.axisLeft(yScale)
             .tickValues(yearRange)
             .tickFormat(d3.format("d"));
@@ -395,7 +378,6 @@ Promise.all([
             .duration(1000)
             .call(yAxis);
 
-        // 添加/更新圆点（带动画）
         const dots = agesvg.selectAll(".dot")
             .data(aggregatedData, d => `${d.year}-${d.ageGroup}`);
 
@@ -452,6 +434,7 @@ Promise.all([
             .attr("x", agewidth / 2)
             .attr("y", ageheight + margin.bottom - 10)
             .style("text-anchor", "middle")
+            .style("font-size", "14px") 
             .text("Age Groups");
 
         agesvg.append("text")
@@ -460,6 +443,7 @@ Promise.all([
             .attr("x", -ageheight / 2)
             .attr("y", -margin.left + 20)
             .style("text-anchor", "middle")
+            .style("font-size", "14px") 
             .text("Olympic Years");
 
     }
@@ -533,23 +517,6 @@ Promise.all([
             .radius(d => ratioRadiusScale(d.ratio))
             .curve(d3.curveCardinalClosed.tension(0.7));
 
-
-
-        // // 绘制男性参与数据
-        // gendersvg.append("path")
-        //     .datum(olympicsData)
-        //     .attr("fill", "rgba(128, 128, 128, 0.6)")
-        //     .attr("stroke", "rgba(128, 128, 128, 0.8)")
-        //     .attr("stroke-width", 1)
-        //     .attr("d", maleAreaGenerator);
-
-        // // 绘制女性参与数据
-        // gendersvg.append("path")
-        //     .datum(olympicsData)
-        //     .attr("fill", "rgba(255, 182, 193, 0.6)")
-        //     .attr("stroke", "rgba(255, 182, 193, 0.8)")
-        //     .attr("stroke-width", 1)
-        //     .attr("d", femaleAreaGenerator);
         gendersvg.append("path")
         .datum(olympicsData)
         .attr("fill", "rgba(255, 182, 193, 0.6)")
@@ -645,8 +612,8 @@ Promise.all([
             .attr("dx", 5)
             .attr("dy", -5)
             .style("font-size", "10px")
-            .style("fill", "#FF1493")
-            .text(d => `${d.ratio.toFixed(2)}`);
+            .style("fill", "#FF1493");
+            // .text(d => `${d.ratio.toFixed(2)}`);
 
         // 添加年份标签
         gendersvg.selectAll(".year-label")

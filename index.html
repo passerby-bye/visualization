@@ -6,47 +6,226 @@
     <title>Visualization of Summer Olympics</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
     <link rel="stylesheet" type="text/css" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .swcontainer {
+            position: relative; 
+            max-width: 1300px;
+            height: 500px; 
+        }
+
+        .swcontainer img {
+            position: absolute; 
+            top: 100px;
+            left: 200px;
+
+            z-index: 1; 
+        }
+        .tablecontainer img {
+            position: absolute; 
+            top: 220px;
+            left: 500px;
+
+            z-index: 1; 
+        }
+
+        #swchart {
+            position: absolute; /* 设置为绝对定位 */
+            top: 0;
+            left: 450px;
+            width: 100%; /* 让图表充满整个容器 */
+            height: 100%;
+            z-index: 2; /* 图表在上层 */
+        } 
+        .sports-container {
+            position: relative;
+            width: 1400px;
+            height: 650px; 
+            margin: 50px auto;
+            overflow: hidden;
+        }
+        .swcontainer, .rcontainer, .tablecontainer {
+            position: absolute;
+            width: 100%;
+            height: 100%; 
+            transition: transform 0.5s ease;
+        }
+        .swcontainer {
+            transform: translateX(0);
+        }
+        .rcontainer {
+            transform: translateX(100%);
+        }
+        .tablecontainer {
+            transform: translateX(200%);
+        }
+        .nav-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: white;
+            z-index: 1000;
+            transition: background 0.3s;
+        }
+        .nav-arrow:hover {
+            background: rgba(0, 0, 0, 0.8);
+        }
+        .nav-arrow.right {
+            right: 10px;
+        }
+        .nav-arrow.left {
+            left: 10px;
+            display: none;
+        }
+        .nav-arrow::before {
+            content: '';
+            width: 10px;
+            height: 10px;
+            border-top: 2px solid white;
+            border-right: 2px solid white;
+            transform: rotate(45deg);
+        }
+        .nav-arrow.left::before {
+            transform: rotate(-135deg);
+        }
+        #tablehart{
+            width: 100%; /* 让图表充满整个容器 */
+            height: 100%;
+        }
+
+        #swchart, #rchart, #tablehart {
+            position: relative;
+            width: 100%;
+            height: calc(100% - 50px); /* 减去标题的高度 */
+            z-index: 2;
+        }
+        #rchart{
+            display: flex;
+            align-items: center;
+            justify-content: center
+        }
+        .nav-dots {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+        .nav-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .nav-dot.active {
+            background: rgba(0, 0, 0, 0.8);
+        }
+    </style>
 </head>
 
 <body>
     <h1>Visualization of Summer Olympics</h1>
+    <div class="wrapper">
+        <div class="instruction-text">hover and click this circle to select year</div>
     <div class="container">
-        <div id="chart">
-            <h2>Participation in the Summer Olympics by Continent and Year</h2>
-        </div>
-
-        <div id="controls">
-            <h2>Olympic Nations Medal Mapper</h2>
-            <div id="map-container"></div>
+        <!-- <div class="view-buttons-container">
+        </div> -->
+        <div class="visualization-container">
             
-            <select id="year-select"></select>
-            <div id="medal-type-select" class="medal-selector"></div>
-            <div class="legend"></div>
+            <div id="chart">
+                <!-- <h2>Participation in the Summer Olympics by Continent and Year</h2> -->
+            </div>
+            <div id="controls">
+                <div id="map-container"><div class="header-container"><h2 id="year-select"></h2><h2>Olympic Nations Medal Mapper</h2></div></div>
+                
+                <div id="medal-type-select" class="medal-selector"></div>
+                <div class="legend"></div>
+            </div>
+            
+        </div>
+    </div></div>
+
+    <!-- 新的仪表板部分 -->
+    <div class="dashboard-container">
+        <!-- 左侧面板：国家列表 -->
+        <div class="left-panel">
+            <div class="countrycontainer">
+                <div class="scroll-container" id="countryContainer">
+                    <!-- Countries will be added dynamically -->
+                </div>
+            </div>
         </div>
 
-    </div>
-    <div class="countrycontainer">
-        <div class="scroll-container" id="countryContainer">
-            <!-- 国家圆圈将通过JavaScript动态添加 -->
+        <!-- 中间面板：年龄分布图 -->
+        <div class="center-panel">
+            <div class="agecontainer">
+                <div id="agechart"></div>
+            </div>
+        </div>
+
+        <!-- 右侧面板：性别分布和运动项目分布 -->
+        <div class="right-panel">
+            <div id="genderchart">
+                <div class="title">Gender Distribution and female/male ratio</div>
+            </div>
+            <div id="voronoichart">
+                <div class="title">Sports Distribution</div>
+                <div class="year-control">
+                    <label for="yearSelector">Year: <span id="yearDisplay"></span></label>
+                    <input type="range" id="yearSelector" class="year-selector" list="yearList">
+                    <datalist id="yearList"></datalist>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="agecontainer">
-        <div id="agechart"></div> </div>
-        <div class="gender_spootrs_container">
-              <div id="genderchart">
-                <div class="title">Gender Distribution and female/male ratio</div> 
-              </div>
-             
-        <div id="voronoichart">     <div class="title">Sports Distribution</div>    <div class="year-control">
-            <label for="yearSelector">Year: <span id="yearDisplay"></span></label>
-            <input type="range" id="yearSelector" class="year-selector" list="yearList">
-            <datalist id="yearList">
-                <!-- 年份选项会通过JavaScript动态填充 -->
-            </datalist>
-        </div></div>      
+
+    <div>
+        <div class="sports-container">
+            <div class="swcontainer">
+                <h2 style="text-align: center; color: #333;">Top 20 Swimmers Medal Table</h2>
+                <img src="resource/swim.svg" alt="SVG Image" width="600" height="600">
+                <div id="swchart"></div>
+            </div>
+            <div class="rcontainer">
+                <h2 style="text-align: center; color: #333;">Top 20 Athletics Medal Table</h2>
+                <div id="rchart"></div>
+            </div>
+            <div class="tablecontainer">
+                <h2 style="text-align: center; color: #333;">Top 20 Table Tennis Player Medal Table</h2>
+                <img src="resource/table_tennis.svg" alt="SVG Image" width="400" height="400">
+                <div id="tablehart"></div>
+            </div>
+            
+            <div class="nav-arrow left"></div>
+            <div class="nav-arrow right"></div>
+            
+            <div class="nav-dots">
+                <div class="nav-dot active"></div>
+                <div class="nav-dot"></div>
+                <div class="nav-dot"></div>
+            </div>
         </div>
+
+
+    </div>
 
 
    
@@ -55,11 +234,21 @@
     <script src="https://unpkg.com/d3-weighted-voronoi@1.1.3/build/d3-weighted-voronoi.js"></script>
     <script src="https://unpkg.com/d3-voronoi-map@2.1.1/build/d3-voronoi-map.js"></script>
     <script src="https://unpkg.com/papaparse@5.3.0/papaparse.min.js"></script>
+
+
+    <!-- <script src="viewSwitcher.js"></script> -->
     <script src="count.js"></script>
     <script src="map.js"></script>
     <script src="age.js"></script>
-    <!-- <script src="gender.js"></script> -->
+    <script src="swimming.js"></script>
+    <script src="running.js"></script>
+    <script src="table_tennis.js"></script>
     <script>
+        setTimeout(() => {
+            document.getElementById('chart').classList.add('move-left');
+            document.getElementById('controls').classList.add('show');
+        }, 5000);
+
         let countryData = null;
         let selectedCountryCode = null;
 
@@ -139,6 +328,53 @@
             clearInterval(scrollInterval);
         }
         document.addEventListener('DOMContentLoaded', initializeData);
+        let currentIndex = 0;
+const containers = ['.swcontainer', '.rcontainer', '.tablecontainer'];
+const totalContainers = containers.length;
+
+function updateNavigation() {
+    // 更新箭头显示状态
+    document.querySelector('.nav-arrow.left').style.display = currentIndex > 0 ? 'flex' : 'none';
+    document.querySelector('.nav-arrow.right').style.display = currentIndex < totalContainers - 1 ? 'flex' : 'none';
+    
+    // 更新容器位置
+    containers.forEach((container, index) => {
+        const elem = document.querySelector(container);
+        elem.style.transform = `translateX(${(index - currentIndex) * 100}%)`;
+    });
+    
+    // 更新导航点
+    document.querySelectorAll('.nav-dot').forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentIndex);
+    });
+}
+
+// 添加箭头点击事件
+document.querySelector('.nav-arrow.right').addEventListener('click', () => {
+    if (currentIndex < totalContainers - 1) {
+        currentIndex++;
+        updateNavigation();
+    }
+});
+
+document.querySelector('.nav-arrow.left').addEventListener('click', () => {
+    if (currentIndex > 0) {
+        currentIndex--;
+        updateNavigation();
+    }
+});
+
+// 添加导航点点击事件
+document.querySelectorAll('.nav-dot').forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+        currentIndex = index;
+        updateNavigation();
+    });
+});
+
+// 初始化导航状态
+updateNavigation();
+
     </script>
 </body>
 

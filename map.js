@@ -6,13 +6,16 @@ let selectedMedalType = 'Gold_Medal_Count'; // 默认显示金牌数量
 const svg_map = d3.select("#map-container")
     .append("svg")
     .attr("width", 1500)
-    .attr("height", 1000)
-    .style("background", "linear-gradient(to bottom, #f8f9fa, #e9ecef)");
+    .attr("height", 600)
+    // .style("background", "linear-gradient(to bottom, #f8f9fa,rgb(241, 241, 241))");
+    .style("background", "rgb(236, 236, 233)")
+    ;
+
 
 // 创建投影
 const projection = d3.geoMercator()
-    .scale(200)
-    .translate([1500 / 2, 1000 / 1.5]);
+    .scale(150)
+    .translate([630,350]);
 
 const path = d3.geoPath().projection(projection);
 
@@ -266,14 +269,9 @@ async function loadData() {
         const yearSelect = document.getElementById('year-select');
         yearSelect.innerHTML = '';
         
-        years.forEach(year => {
-            const option = document.createElement('option');
-            option.value = year;
-            option.text = year;
-            yearSelect.appendChild(option);
-        });
+
         
-        yearSelect.value = window.selectedYear || years[years.length - 1];
+        yearSelect.textContent = window.selectedYear || years[years.length - 1];
         yearSelect.addEventListener('change', updateDisplay);
         
         updateDisplay();
@@ -298,7 +296,7 @@ function getMedalData(year) {
 
 // 更新显示
 function updateDisplay() {
-    const selectedYear = parseInt(document.getElementById('year-select').value);
+    const selectedYear = parseInt(document.getElementById('year-select').textContent);
     const medals = getMedalData(selectedYear);
 
     // 更新地图颜色和边框
