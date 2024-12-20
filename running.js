@@ -138,7 +138,7 @@ function rcreateChart(data) {
         rtooltip.transition()
             .duration(200)
             .style("opacity", .9);
-        rtooltip.html(`${d.name}<br/>金牌: ${d.gold}<br/>银牌: ${d.silver}<br/>铜牌: ${d.bronze}<br/>总数: ${d.total}`)
+        rtooltip.html(`${d.name}<br/>Gold: ${d.gold}<br/>Silver: ${d.silver}<br/>Bronze: ${d.bronze}<br/>Total: ${d.total}`)
             .style("left", (event.pageX + 10) + "px")
             .style("top", (event.pageY - 28) + "px");
     })
